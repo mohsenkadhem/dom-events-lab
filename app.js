@@ -2,7 +2,10 @@
 
 
 /*-------------------------------- Variables --------------------------------*/
-let input = ''; 
+let firstNumber = '';
+let secondNumber = '';
+let operation = '';
+let result = '';
 
 /*------------------------ Cached Element References ------------------------*/
 const calculator = document.querySelector('#calculator');
@@ -21,23 +24,47 @@ calculator.addEventListener('click', function(event) {
 
   /*-------------------------------- Functions --------------------------------*/
   if (value === 'C') {
-    input = '';
+    firstNumber = '';
+    secondNumber = '';
+    operation = '';
+    result = '';
     display.textContent = '';
     return;
   }
 
-  if (value === '=') {
-    try {
-      const result = eval(input);
-      display.textContent = result;
-      input = result.toString();
-    } catch (e) {
-      display.textContent = 'Error';
-      input = '';
+  if (value === '=' && firstNumber && secondNumber && operation) {
+    let num1 = parseFloat(firstNumber);
+    let num2 = parseFloat(secondNumber);
+
+    if (operation === '+') {
+      result = num1 + num2;
+    } else if (operation === '-') {
+      result = num1 - num2;
+    } else if (operation === '*') {
+      result = num1 * num2;
+    } else if (operation === '/') {
+      result = num1 / num2;
+    }
+
+    display.textContent = result;
+    firstNumber = result.toString();
+    secondNumber = '';
+    operation = '';
+    return;
+  }
+
+  if (['+', '-', '*', '/'].includes(value)) {
+    if (firstNumber) {
+      operation = value;
     }
     return;
   }
 
-  input += value;
-  display.textContent = input;
+  if (!operation) {
+    firstNumber += value;
+    display.textContent = firstNumber;
+  } else {
+    secondNumber += value;
+    display.textContent = secondNumber;
+  }
 });
